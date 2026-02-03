@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 class ClearConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
 
-  const ClearConfirmationDialog({Key? key, required this.onConfirm})
-      : super(key: key);
+  const ClearConfirmationDialog({super.key, required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),

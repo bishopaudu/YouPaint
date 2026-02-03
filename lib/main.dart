@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:youpaint/view/drawing_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:youpaint/utils/app_theme.dart';
+import 'package:youpaint/view/home_screen.dart';
+import 'package:youpaint/viewmodel/drawing_viewmodel.dart';
+import 'package:youpaint/viewmodel/gallery_viewmodel.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,18 +14,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'YouPaint',
-       theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white12,
-        useMaterial3: true,
-        textTheme: GoogleFonts.bricolageGrotesqueTextTheme(),
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => DrawingViewmodel()),
+        ChangeNotifierProvider(create: (_) => GalleryViewmodel()),
+      ],
+      child: MaterialApp(
+        title: 'YouPaint',
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        home: const HomeScreen(),
+        debugShowCheckedModeBanner: false,
       ),
-      home: DrawingScreen(),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
-

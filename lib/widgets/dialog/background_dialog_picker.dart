@@ -5,8 +5,7 @@ import 'package:youpaint/viewmodel/drawing_viewmodel.dart';
 class BackgroundColorPicker extends StatelessWidget {
   final DrawingViewmodel viewmodel;
 
-  const BackgroundColorPicker({Key? key, required this.viewmodel})
-      : super(key: key);
+  const BackgroundColorPicker({super.key, required this.viewmodel});
 
   @override
   Widget build(BuildContext context) {

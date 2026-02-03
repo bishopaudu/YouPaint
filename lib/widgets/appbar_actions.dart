@@ -102,22 +102,42 @@ class AppBarActions extends StatelessWidget {
             repaintKey.currentContext?.findRenderObject() as RenderBox?;
         final size = renderBox?.size ?? Size(400, 450);
 
-      /*  await ExportService.exportReplayAsVideo(
-          service.points,
-          service.backgroundColor,
+        // Show Progress Dialog
+        final progressNotifier = ValueNotifier<double>(0.0);
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => LoadingDialog(
+            progressNotifier: progressNotifier,
+            message: "Generating Video...",
+          ),
+        );
+
+        await ExportService.exportReplayAsVideo(
+          viewmodel.points,
+          viewmodel.backgroundColor,
           filename,
           size,
-        );*/
+          onProgress: (progress) {
+             progressNotifier.value = progress;
+          },
+        );
+        
+        // Close Dialog
+        Navigator.pop(context);
 
         _showSuccessSnackbar(
           context,
-          "Video export initiated! (Note: Full MP4 encoding requires FFmpeg integration)",
+          "Video exported successfully to Gallery!",
         );
       } else {
         await ExportService.exportAsPNG(repaintKey, filename);
         _showSuccessSnackbar(context, "Drawing saved as PNG successfully!");
       }
     } catch (e) {
+      // Close Dialog if open (check if context is valid/mounted if needed, but simple pop is safeish here)
+       if (isVideo) Navigator.pop(context);
+       
       _showErrorSnackbar(context, "Export failed: $e");
     }
   }
@@ -152,6 +172,61 @@ class AppBarActions extends StatelessWidget {
         backgroundColor: Color(0xFFE74C3C),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+}
+
+// ==================== Loading Dialog ====================
+class LoadingDialog extends StatelessWidget {
+  final ValueNotifier<double> progressNotifier;
+  final String message;
+
+  const LoadingDialog({
+    Key? key,
+    required this.progressNotifier,
+    required this.message,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      content: ValueListenableBuilder<double>(
+        valueListenable: progressNotifier,
+        builder: (context, value, child) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 10),
+              // Determine status text
+              Text(
+                value >= 0.8 ? "Encoding Video..." : "Generating Frames...",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              SizedBox(height: 20),
+              
+              if (value >= 0.8) 
+                 CircularProgressIndicator(color: Color(0xFF667EEA))
+              else
+                 LinearProgressIndicator(
+                  value: value / 0.8, // Normalize 0.0-0.8 to 0.0-1.0
+                  backgroundColor: Colors.grey[200],
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF667EEA)),
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                
+              SizedBox(height: 10),
+              if (value < 0.8)
+                Text(
+                  "${((value / 0.8) * 100).toInt()}%",
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
