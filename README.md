@@ -23,19 +23,6 @@ Replay the entire drawing process as a time-based animation.
 💾 Save Artwork
 Export your drawing as a PNG image and store it locally on the device.
 
-🧲 Draggable Tool Panel
-Tools are placed inside a draggable bottom sheet to keep the canvas centered and distraction-free.
-
-🖼 Screenshots
-
-Replace these image URLs with your actual screenshots.
-
-Home / Canvas	Tools Panel Open	Replay Example
-
-<img width="1290" height="2796" alt="simulator_screenshot_7C0464D2-CE05-492A-AC6F-098F3A3FECC2" src="https://github.com/user-attachments/assets/b9c9f4e9-bf8b-4136-b365-80aaad5eb24e" />
-
-	
-	
 🧠 Architecture & Design
 
 YouPaint follows a clean and scalable structure:
@@ -93,19 +80,6 @@ Run the app
 flutter pub get
 flutter run
 
-🔮 Planned Improvements
-
-Undo / Redo support
-
-Multiple brush types
-
-Zoom & pan canvas
-
-Layers support
-
-Cloud sync (Firebase / Supabase)
-
-AI-assisted drawing features (auto-color, shape detection)
 
 🎯 Why This Project?
 
